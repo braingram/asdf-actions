@@ -1,0 +1,45 @@
+# install the target branch
+# run the tools
+# install the source branch
+# run the tools
+# compare the output and generate a report
+
+
+name: Compare ASDF tag/type support post PR
+
+on:
+  workflow_call:
+    inputs:
+      ignore:
+        description: Ignore some things
+        required: false
+        default: ''
+        type: string
+      # TODO python version?
+
+jobs:
+  compare_asdf:
+    name: Compare ASDF tag/type support
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: braingram/asdf-actions
+          path: asdf-actions
+          sparse-checkout: .
+      - uses: actions/setup-python@v5
+          with:
+            python-version: '3.10'
+      - run: pip install -r asdf-actions/requirements.txt
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.base_ref }}
+          path: base
+      - run: pip install ./base
+      - run: python asdf-actions/record_tag_info.py base.asdf
+      - uses: actions/checkout@v4
+        with:
+          path: src
+      - run: pip install ./src
+      - run: python asdf-actions/record_tag_info.py src.asdf
+      - run: python asdf-actions/compare_tag_info_by_version.py base.asdf src.asdf >> $GITHUB_STEP_SUMMARY
