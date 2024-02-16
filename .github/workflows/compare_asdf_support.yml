@@ -28,8 +28,8 @@ jobs:
           path: asdf-actions
           sparse-checkout: .
       - uses: actions/setup-python@v5
-          with:
-            python-version: '3.10'
+        with:
+          python-version: '3.10'
       - run: pip install -r asdf-actions/requirements.txt
       - uses: actions/checkout@v4
         with:
