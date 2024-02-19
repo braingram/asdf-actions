@@ -43,7 +43,7 @@ jobs:
       - run: pip install ./src
       - run: python asdf-actions/record_tag_info.py src.asdf
       - run: python asdf-actions/compare_tag_info_by_version.py base.asdf src.asdf >> report.md
-      - run: echo report.md >> $GITHUB_STEP_SUMMARY
+      - run: cat report.md >> $GITHUB_STEP_SUMMARY
       - uses: actions/upload-artifact@v4
         with:
           name: compare-asdf-report-data
